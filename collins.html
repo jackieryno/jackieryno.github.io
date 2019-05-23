@@ -1,0 +1,103 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Processing Demo</title>
+<script type="text/javascript" src="js/processing.js"></script>
+</head>
+<body>
+<script type="text/processing">
+/**
+*@ Author: jack
+*@ Version: 1 and 5/17/2019
+*/
+// Inlinecomment
+PImage back;
+PImage pu;
+PImage k;
+int score = 0;
+int highScore = 0;
+int gamestate = 0;
+int x, y, vy = 0;
+int[] wx = new int[2];
+int[] wy = new int[2];
+void setup() {
+  size(1000,500);
+   imageMode(CENTER);
+   back =loadImage("./img/back.jpg");
+ k = loadImage("./img/k.png"); 
+  pu =loadImage("./img/pu.png");
+  
+ 
+  
+    
+  }
+void draw () { 
+  if(gamestate == 0) {
+     imageMode(CORNER);
+     image(back, x, 0);
+     image(back, x+back.width, 0);
+  
+  
+  x -= 6;
+  y += vy;
+    
+  if(x<-1000){//reset to start
+  x=0;
+  }
+  image(back, x+back.width, 0);
+  image(k, width/2, y);
+  x -= 1;
+  vy += 1;
+  y += vy;
+  for(int i = 0 ; i < 2; i++) {
+    imageMode(CENTER);
+    image(pu, wx[1], wy[1] - (pu.height/2+100));
+    image(pu, wx[1], wy[1] + (pu.height/2+100));
+    if(wx[i] < 0) {
+      wy[i] = (int)random(200,height-200);
+      wx[i] = width;
+    }
+    if(wx[i] == width/2) {
+      score ++;
+      highScore = max(score, highScore);
+    }
+
+  
+    wx[i] -= 6;
+  }
+  text(""+score, width/2-15, 700);
+    
+  }
+  if(x < - (back.width)){
+    
+  
+    
+}
+else {
+  text("High Score: "+highScore, 50, width);
+  
+  
+}
+}
+void mousePressed() {
+  vy = -17;
+  if(gamestate==1) {
+    wx[0] = 600;
+    wy[0] =height/2;
+    wx[1] = 900;
+    wy[1] = 600;
+    x = 0;
+    y = height / 2;
+    gamestate = 0;
+  }
+}
+void checkImage (){
+  if(x<back.width){
+    x = 0;// reset to beginning
+  }
+}
+
+</script>
+<canvas id="sketch" style="border: 1px solid black;"></canvas>
+</body>
+</html>
