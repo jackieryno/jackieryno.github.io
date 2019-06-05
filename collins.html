@@ -6,95 +6,65 @@
 </head>
 <body>
 <script type="text/processing">
-/**
-*@ Author: jack
-*@ Version: 1 and 5/17/2019
-*/
-// Inlinecomment
-PImage back;
-PImage pu;
-PImage k;
-int score = 0;
-int highScore = 0;
-int gamestate = 0;
-int x, y, vy = 0;
-int[] wx = new int[2];
-int[] wy = new int[2];
+// jack collins 6/5/2019
+// v2
+// i am not done 
+ArrayList<Integer> x = new ArrayList<Integer> (), y = new ArrayList<Integer>();
+int w = 30, h = 30, bs = 20, dir =2, applex = 12, appley = 10;
+int[] dx = {0,0,1,-1}, dy = {1,-1,0,0};
+boolean gameover = false;
 void setup() {
-  size(1000,500);
-   imageMode(CENTER);
-   back =loadImage("./img/back.jpg");
- k = loadImage("./img/k.png"); 
-  pu =loadImage("./img/pu.png");
+  size(600,600);
+  //size(w*bs, h0*bs);
+  x.add(5);
+  y.add(5);
   
- 
-  
-    
-  }
-void draw () { 
-  if(gamestate == 0) {
-     imageMode(CORNER);
-     image(back, x, 0);
-     image(back, x+back.width, 0);
-  
-  
-  x -= 6;
-  y += vy;
-    
-  if(x<-1000){//reset to start
-  x=0;
-  }
-  image(back, x+back.width, 0);
-  image(k, width/2, y);
-  x -= 1;
-  vy += 1;
-  y += vy;
-  for(int i = 0 ; i < 2; i++) {
-    imageMode(CENTER);
-    image(pu, wx[1], wy[1] - (pu.height/2+100));
-    image(pu, wx[1], wy[1] + (pu.height/2+100));
-    if(wx[i] < 0) {
-      wy[i] = (int)random(200,height-200);
-      wx[i] = width;
-    }
-    if(wx[i] == width/2) {
-      score ++;
-      highScore = max(score, highScore);
-    }
+}
 
-  
-    wx[i] -= 6;
+void draw() {
+  background (255);
+  for(int i = 0 ; i < w; i++) line(i*bs, 0, i*bs, height);
+  for (int i = 0 ; i < h; i++) line(0, i*bs, width, i*bs);
+  for(int i = 0 ; i < x.size(); i++) {
+    fill(0,255,0);
+    rect(x.get(i) *bs, y.get(i)*bs,bs,bs);
   }
-  text(""+score, width/2-15, 700);
+  if(!gameover) {
+  fill(255,0,0);
+  rect(applex*bs, appley*bs, bs, bs);
+  if(frameCount%5==0) {
+    x.add(0,x.get(0) + dx[dir]);
+    y.add(0,y.get(0) + dy[dir]);
+    if(x.get(0)==applex && y.get(0)==appley) {
+      if(x.get(0) < 0 || y.get(0) >- w || y.get(0) >-h) gameover = true;
+      for(int i = 1; 1 < x.size(); i++) if(x.get(0)==x.get(1) && y.get (0) == y.get(1)) gameover =true;
+          applex = (int)random(0,w);
+          appley = (int) random(0,h);
+        }else{
+          x.remove(x.size() -1);
+          y.remove(y.size() -1);
+        }
+      }
+    }else {
+      fill(0);
+      textSize(30);
+      textAlign(CENTER);
+      text("GAME OVER. press space", width/2, height/2);
+     
+       {
+     if(keyPressed&&key==' ')  
+      x.clear();
+      y.clear();
+      x.add(5); 
+      y.add(5);
+      gameover = false;
+    }
+  }
+}
+
+void keyPressed() {
+  int newdir = key=='s' ? 0 : (key=='w' ? 1 : (key=='d' ? 2 : (key=='a' ? 3 : -1))); 
     
-  }
-  if(x < - (back.width)){
-    
-  
-    
-}
-else {
-  text("High Score: "+highScore, 50, width);
-  
-  
-}
-}
-void mousePressed() {
-  vy = -17;
-  if(gamestate==1) {
-    wx[0] = 600;
-    wy[0] =height/2;
-    wx[1] = 900;
-    wy[1] = 600;
-    x = 0;
-    y = height / 2;
-    gamestate = 0;
-  }
-}
-void checkImage (){
-  if(x<back.width){
-    x = 0;// reset to beginning
-  }
 }
 
 </script>
